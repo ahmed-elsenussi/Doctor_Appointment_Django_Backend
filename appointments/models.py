@@ -1,6 +1,6 @@
 from django.db import models
-from doctor.models import Doctor
-from patient.models import Patient
+from doctors.models import Doctor
+from patients.models import Patient
 
 # Create your models here.
 #-------------------------
