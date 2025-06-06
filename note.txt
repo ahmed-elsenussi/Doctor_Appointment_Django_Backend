@@ -1,0 +1,4 @@
+password : doctorAppointmentSystem-Backend
+
+
+pip install psycopg2-binary
