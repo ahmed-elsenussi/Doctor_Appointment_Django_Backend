@@ -14,7 +14,8 @@ urlpatterns = [
     path('patients/', include('patients.urls')),
     path('appointments/', include('appointments.urls')),
     path('notifications/', include('notifications.urls')),
-
+    # [AMS] for using JWT authentication and google login
+    path('auth/', include('social_django.urls', namespace='social')),
 ]
 
 

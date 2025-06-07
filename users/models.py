@@ -56,6 +56,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     email_verified = models.BooleanField(default=False)
     role = models.CharField(max_length=10, choices=RoleChoices.choices, default=RoleChoices.GUEST)
     is_approved = models.BooleanField(default=False)
+    email_verification_token = models.CharField(max_length=100, blank=True, null=True)
 
     # this is for django admin and auth
     is_active = models.BooleanField(default=True)
@@ -68,7 +69,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['name']
 
-
-    # in case printing the user
+    #[AMS] for representation on admin panal
+    # changed to be email not name <unique>
     def __str__(self):
-        return self.name
+        return self.email
+
