@@ -33,9 +33,9 @@ class Doctor(models.Model):
     specializations = models.ManyToManyField(Specialization, related_name='doctors')
 
     # images
-    doctor_image_path = models.ImageField(upload_to='doctor/images/')
-    national_id_image_path = models.ImageField(upload_to='doctor/national_ids/')
-    background_image_path = models.ImageField(upload_to='doctor/backgrounds/')
+    doctor_image_path = models.ImageField(upload_to='doctors/images/')
+    national_id_image_path = models.ImageField(upload_to='doctors/national_ids/')
+    background_image_path = models.ImageField(upload_to='doctors/backgrounds/')
 
 
     #  text

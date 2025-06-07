@@ -2,7 +2,7 @@ from rest_framework import serializers
 from .models import Doctor, Specialization
 
 # SPECIALIZATION SERIALIZER
-class SpecializationSerializer(serializers.ModelSerializer):  # ✅ Correct spelling
+class SpecializationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Specialization
         fields = '__all__'
@@ -32,6 +32,4 @@ class DoctorSerializer(serializers.ModelSerializer):
             'background_image_path',
             'doctor_bio',
             'location',
-            'doctor_availability',
-            'available_days'
         ]
