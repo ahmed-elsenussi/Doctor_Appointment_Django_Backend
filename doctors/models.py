@@ -4,7 +4,7 @@ from django.contrib.postgres.fields import ArrayField
 
 
 
-# [SENU]: fully written
+# [SENU] comments
 
 class Days(models.TextChoices):
     SAT = 'sat', 'Saturday'
@@ -16,7 +16,7 @@ class Days(models.TextChoices):
     FRI = 'fri', 'Friday'
 
 
-# SPECIALIZATION MODEL
+# [SENU]: SPECIALIZATION MODEL
 class Specialization(models.Model):
     # id is auto added
     name  = models.CharField(max_length=200, unique=True, null=False) 

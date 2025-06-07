@@ -2,7 +2,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 
 
-
+# [SENU] comments
+# ----------------
 # NOTE: NEW USER BASED ON EMAIL
 # CUSTOM MANAGER: MADE FOR THIS
 # PASSWORD: REMOVED BECAUSE EXIST ALREADY

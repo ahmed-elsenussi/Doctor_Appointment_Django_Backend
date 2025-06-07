@@ -1,11 +1,9 @@
 from django.db import models
-from users.models import User  # assuming you have a User model here
+from users.models import User  # [SENU]: assuming you have a User model here
 
-# Create your models here.
-#--------------------------
 
-# [SENU]: fully written
 
+# [SENU] comments
 class Notification(models.Model):
 
     # id is auto added

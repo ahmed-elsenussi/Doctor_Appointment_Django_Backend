@@ -1,11 +1,8 @@
 from django.db import models
 from users.models import User
 
-# Create your models here.
-#--------------------------
 
-# [SENU]: fully written
-
+# [SENU] comments
 class Patient(models.Model):
 
     # primary key and foreigin key for the user table

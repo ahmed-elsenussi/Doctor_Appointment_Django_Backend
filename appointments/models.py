@@ -2,10 +2,9 @@ from django.db import models
 from doctors.models import Doctor
 from patients.models import Patient
 
-# Create your models here.
+# [SENU] comments
 #-------------------------
 
-# [SENU]: fully written
 
 class ReserveStatus(models.TextChoices):
     PENDING = 'pending', 'Pending'
@@ -30,7 +29,7 @@ class Days(models.TextChoices):
 class Appointment(models.Model):
 
     # id is auto added
-    # [FK]: one to many (doctor, patient)
+    # <FK> one to many (doctor, patient)
     doctor_id = models.ForeignKey(Doctor, on_delete=models.CASCADE, related_name='appointments')
     patient_id = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='appointments')
 
