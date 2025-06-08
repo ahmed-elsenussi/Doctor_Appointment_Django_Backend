@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     'dj_rest_auth',
     'dj_rest_auth.registration',
+    'corsheaders',
     # =====================
     'appointments',
     'doctors',
@@ -69,6 +70,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',  # newly added
 
     'django.middleware.security.SecurityMiddleware',
+        'corsheaders.middleware.CorsMiddleware',  
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -76,6 +78,11 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  #[AMS] React default port
+    
+]
+CORS_ALLOW_CREDENTIALS = True
 # [AMS] for using JWT authentication and google login
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
