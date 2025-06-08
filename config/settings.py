@@ -32,7 +32,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'corsheaders',  #[SENU]: added to allow requests from frontend
     'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -70,7 +69,6 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',  # newly added
 
     'django.middleware.security.SecurityMiddleware',
-        'corsheaders.middleware.CorsMiddleware',  
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
