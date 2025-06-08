@@ -31,7 +31,7 @@ class Appointment(models.Model):
     # id is auto added
     # <FK> one to many (doctor, patient)
     doctor_id = models.ForeignKey(Doctor, on_delete=models.CASCADE, related_name='appointments')
-    patient_id = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='appointments')
+    patient_id = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='appointments', blank=True, null=True)
 
     # reserve status: the reservation status for teh appointments
     reserve_status = models.CharField(max_length=15, choices=ReserveStatus.choices, default=ReserveStatus.PENDING)
@@ -40,7 +40,7 @@ class Appointment(models.Model):
     day = models.CharField(max_length=20, choices=Days.choices)
 
     # date and times [from-to]
-    date = models.DateField()
+    date = models.DateField(blank=True, null=True) #[SENU]: I made the date optional for now
     from_time = models.TimeField()
     to_time = models.TimeField()
 

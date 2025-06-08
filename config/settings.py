@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders',  #[SENU]: added to allow requests from frontend
     'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -59,9 +60,14 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    
     # auth middleware
     'allauth.account.middleware.AccountMiddleware',
     # -----
+    # [SENU]: the middleware of the Cors
+    'corsheaders.middleware.CorsMiddleware', # newly added
+    'django.middleware.common.CommonMiddleware',  # newly added
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -187,6 +193,7 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
+#===================CUSTOM=VARS======================================
 
 # [SENU] related to users table override
 # [SENU] telling django to use this custom user model
@@ -218,26 +225,11 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_REDIRECT_URI = 'http://localhost:8000/auth/google/call
 # ====================================
 
 
+# [SENU]: LIST OF ENPOINTS THAT CAN SEND REQUESTS
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:3000",
+# ]
 
-# [SENU]: TO CENTER THE IMAGE IN ONE PLACE
-MEDIA_URL = '/media/' 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-#[AMS] Email settings ========
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'amhmdslah104@gmail.com'  
-EMAIL_HOST_PASSWORD = 'qgsy guda swgz vckf' 
-# login throw google 
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_EMAIL_VERIFICATION = 'none'  
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_USER_MODEL_USERNAME_FIELD = None
-LOGIN_REDIRECT_URL = '/'
-SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = ['email', 'profile']
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '830041637628-d3troc4aqg9q48q7rmncg1d62sc3q26b.apps.googleusercontent.com'  # Google Client ID
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'  # Google Client Secret
-SOCIAL_AUTH_GOOGLE_OAUTH2_REDIRECT_URI = 'http://localhost:8000/auth/google/callback'
-# ====================================
+# [SENU: FOR TESTINGGGGG]
+CORS_ALLOW_ALL_ORIGINS = True
+
