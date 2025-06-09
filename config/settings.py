@@ -32,7 +32,9 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+
     'corsheaders',  #[SENU]: added to allow requests from frontend
+    'django_filters', #[SENU]:  for effcient filteration
     'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -82,7 +84,9 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
-    )
+    ),
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'], # [SENU]: for effcient filteration
+
 }
 # dj-rest-auth settings
 REST_AUTH = {
