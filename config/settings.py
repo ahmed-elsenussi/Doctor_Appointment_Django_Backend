@@ -103,6 +103,8 @@ AUTHENTICATION_BACKENDS = (
 )
 SITE_ID = 1  
 # ===========================
+ACCOUNT_LOGIN_METHODS = ['email']
+ACCOUNT_SIGNUP_FIELDS = ['email', 'password1', 'password2']
 ## Google OAuth settings
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
