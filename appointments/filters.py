@@ -1,10 +1,12 @@
-from .models import Appointment
 from django_filters import rest_framework as filters
+from .models import Appointment
+
+class CharInFilter(filters.BaseInFilter, filters.CharFilter):
+    pass
 
 class AppointmentFilter(filters.FilterSet):
-
-    # [SENU]: define that this filter is exclude
-    not_reserve_status = filters.CharFilter(field_name = 'reserve_status', exclude = True)
+    # [SENU]: exclude multiple values
+    not_reserve_status = CharInFilter(field_name='reserve_status', exclude=True)
 
     class Meta:
         model = Appointment
