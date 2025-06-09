@@ -7,6 +7,7 @@ from patients.models import Patient
 
 
 class ReserveStatus(models.TextChoices):
+    AVAILABLE = 'available', 'Available'
     PENDING = 'pending', 'Pending'
     APPROVED = 'approved', 'Approved' 
     COMPLETED = 'completed', 'Completed'
@@ -34,7 +35,7 @@ class Appointment(models.Model):
     patient_id = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='appointments', blank=True, null=True)
 
     # reserve status: the reservation status for teh appointments
-    reserve_status = models.CharField(max_length=15, choices=ReserveStatus.choices, default=ReserveStatus.PENDING)
+    reserve_status = models.CharField(max_length=15, choices=ReserveStatus.choices, default=ReserveStatus.AVAILABLE)
 
     # specified day by the patient [from booking] and doctor [from scheduler]
     day = models.CharField(max_length=20, choices=Days.choices)
