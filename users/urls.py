@@ -4,7 +4,7 @@ from django.urls import path
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from .views import (
     UserViewSet,
-    CurrentUserView,
+    CurrentUserView, 
     verify_email,
     google_authenticate,
     GoogleLogin,
@@ -14,7 +14,7 @@ router = DefaultRouter()
 # basename: to be used for the routes of the viewset
 router.register(r'', UserViewSet, basename='users')
 urlpatterns =[
-    path('me/', CurrentUserView.as_view(), name='current-user'),
+    path('me/', CurrentUserView.as_view(), name='current-user'), #[OKS] add users/me endpoint to get the current user details
     path('login/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('login/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('verify-email/<str:token>/', verify_email, name='verify-email'),

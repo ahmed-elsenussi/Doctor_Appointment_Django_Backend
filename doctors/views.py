@@ -11,10 +11,10 @@ class DoctorViewSet(viewsets.ModelViewSet):
     queryset = Doctor.objects.all()
     serializer_class = DoctorSerializer
     permission_classes = [permissions.IsAuthenticated]
+    # [OkS] This viewset allows doctors to view and update their own profile information.
     @action(detail=False, methods=['get', 'put'], url_path='me')
     def me(self, request):
         try:
-            # Assuming `doctor_id` is a OneToOneField to User
             doctor = Doctor.objects.get(doctor_id=request.user)
         except Doctor.DoesNotExist:
             return Response({'error': 'Doctor profile not found.'}, status=404)
