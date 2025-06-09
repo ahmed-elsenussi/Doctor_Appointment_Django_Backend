@@ -2,6 +2,8 @@ from rest_framework import viewsets, status
 from .models import Appointment
 from .serializers import AppointmentSerializer
 from rest_framework.response import Response
+from django_filters.rest_framework import DjangoFilterBackend # [SENU]:for effcient filterting
+from .filters import AppointmentFilter #[SENU]: custom filter made to filter 'NOT EQUAL'
 
 # [SENU]: full CRUD for the appointment
 #-----------------------------
@@ -14,6 +16,10 @@ class AppointmentViewSet(viewsets.ModelViewSet):
 
     queryset = Appointment.objects.all()
     serializer_class = AppointmentSerializer
+
+    # for effcient filteration
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = AppointmentFilter #[SENU]: custom filter made to filter 'NOT EQUAL'
 
 
     # [SENU] override on the create to accept list of objects to be created
