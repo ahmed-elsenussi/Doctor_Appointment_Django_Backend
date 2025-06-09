@@ -9,6 +9,10 @@ from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from dj_rest_auth.registration.views import SocialLoginView
 from rest_framework_simplejwt.tokens import AccessToken
 from django.contrib.auth import get_user_model
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
+
+
 # CRUD user: create, read ,update ,delete
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -117,3 +121,13 @@ class CustomTokenObtainPairView(TokenObtainPairView):
             
 
         return response
+
+#[OKS] this view is used to get the current user details
+class CurrentUserView(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request):
+        serializer = UserSerializer(request.user)
+        return Response(serializer.data)
+
+
+    
