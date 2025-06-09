@@ -8,6 +8,8 @@ from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from dj_rest_auth.registration.views import SocialLoginView
 from rest_framework_simplejwt.tokens import AccessToken
+from doctors.models import Doctor
+from patients.models import Patient
 from django.contrib.auth import get_user_model
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
@@ -17,6 +19,50 @@ from rest_framework.views import APIView
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    #[AMS] we need to override the create method to handle create doctor or patient profile 
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        role = request.data.get('role', 'patient')
+        if role == 'doctor':
+            # first recieve national_id_image_path 
+            # and then create doctor profile
+            doctor_id_image_path = request.FILES.get('doctor_id_image_path')
+            if not doctor_id_image:
+                user.delete()  # Rollback user creation
+                return Response(
+                    {'error': 'National ID image is required for doctor registration'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            Doctor.objects.create(
+                doctor_id=user,
+                doctor_id_image_path=doctor_id_image
+            )
+        
+
+        elif role == 'patient':
+            date_of_birth = request.data.get('date_of_birth')
+            patient_image_path = request.FILES.get('patient_image_path')
+            if not date_of_birth or not patient_image_path:
+                user.delete()  # Rollback user creation
+                return Response(
+                    {'error': 'Both date of birth and patient image are required for patient registration'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            Patient.objects.create(
+                patient_id=user,
+                date_of_birth=date_of_birth,
+                patient_image_path=patient_image_path
+            )
+        
+        
+        return Response(
+                serializer.data,
+                status=status.HTTP_201_CREATED,
+                
+            )
 
 
 @api_view(['GET'])
