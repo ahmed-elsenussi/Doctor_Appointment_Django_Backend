@@ -12,6 +12,9 @@ from doctors.models import Doctor
 from patients.models import Patient
 from django.contrib.auth import get_user_model
 from django.db import transaction  # [SENU] Added for atomicity
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
+
 
 # CRUD user: create, read ,update ,delete
 class UserViewSet(viewsets.ModelViewSet):
@@ -176,3 +179,13 @@ class CustomTokenObtainPairView(TokenObtainPairView):
             
 
         return response
+
+#[OKS] this view is used to get the current user details
+class CurrentUserView(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request):
+        serializer = UserSerializer(request.user)
+        return Response(serializer.data)
+
+
+    
