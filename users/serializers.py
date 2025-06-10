@@ -8,14 +8,24 @@ from django.conf import settings
 import uuid
 
 class UserSerializer(serializers.ModelSerializer):
+    # [AMS] accept national_id_image_path in input when role is doctor
+    national_id_image_path = serializers.ImageField(write_only=True, required=False)
+
     class Meta:
         model = User
-        fields = ['id', 'name', 'email', 'password', 'role', 'email_verified', 'is_approved']
+        fields = ['id', 'name', 'email', 'password', 'role', 'email_verified', 'is_approved', 'national_id_image_path']
         extra_kwargs = {'password': {'write_only': True}}
+
+    def validate(self, data):
+        # [AMS] ensure national_id_image_path is provided when role is doctor
+        if data.get('role') == 'doctor' and not data.get('national_id_image_path'):
+            raise serializers.ValidationError({'national_id_image_path': 'This field is required for doctors.'})
+        return data
 
     def create(self, validated_data):
         
         password = validated_data.pop('password')
+        validated_data.pop('national_id_image_path', None)  # Remove image field, handled by view
         user = User(**validated_data)
         user.set_password(password)
         
@@ -35,6 +45,7 @@ class UserSerializer(serializers.ModelSerializer):
             fail_silently=False,
         )
         return user
+
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
@@ -42,6 +53,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['email'] = user.email
         token['role'] = user.role
         return token
+
     def validate(self, attrs):
         data = super().validate(attrs)
         

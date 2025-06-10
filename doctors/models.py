@@ -34,7 +34,7 @@ class Doctor(models.Model):
 
     # images
     doctor_image_path = models.ImageField(upload_to='doctors/images/', null=True, blank=True)
-    national_id_image_path = models.ImageField(upload_to='doctors/national_ids/')
+    national_id_image_path = models.ImageField(upload_to='doctors/national_ids/', null=True, blank=True)
     background_image_path = models.ImageField(upload_to='doctors/backgrounds/', null=True, blank=True)
 
 
