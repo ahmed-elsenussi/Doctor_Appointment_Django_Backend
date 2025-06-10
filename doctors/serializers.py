@@ -28,6 +28,8 @@ class DoctorSerializer(serializers.ModelSerializer):
             'specializations',        # read nested specialization
             'specialization_ids',     # write with just ids
             'doctor_image_path',
+            'available_days',         #[OKS] for doctor availability      
+            'doctor_availability',     #[OKS] for doctor availability
             'national_id_image_path',
             'background_image_path',
             'doctor_bio',
