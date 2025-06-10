@@ -7,11 +7,62 @@ from rest_framework import status
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from dj_rest_auth.registration.views import SocialLoginView
-
+from rest_framework_simplejwt.tokens import AccessToken
+from doctors.models import Doctor
+from patients.models import Patient
+from django.contrib.auth import get_user_model
 # CRUD user: create, read ,update ,delete
 class UserViewSet(viewsets.ModelViewSet):
+
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+    #[AMS] we need to override the create method to handle create doctor or patient profile 
+    def create(self, request, *args, **kwargs):
+
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        role = request.data.get('role', 'patient')
+        
+        if role == 'doctor':
+            # first recieve national_id_image_path 
+            # and then create doctor profile
+            doctor_id_image_path = request.FILES.get('doctor_id_image_path')
+            if not doctor_id_image:
+                user.delete()  # Rollback user creation
+                return Response(
+                    {'error': 'National ID image is required for doctor registration'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            Doctor.objects.create(
+                doctor_id=user,
+                doctor_id_image_path=doctor_id_image
+            )
+        
+
+        elif role == 'patient':
+            date_of_birth = request.data.get('date_of_birth')
+            patient_image_path = request.FILES.get('patient_image_path')
+            if not date_of_birth or not patient_image_path:
+                user.delete()  # Rollback user creation
+                return Response(
+                    {'error': 'Both date of birth and patient image are required for patient registration'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            Patient.objects.create(
+                patient_id=user,
+                date_of_birth=date_of_birth,
+                patient_image_path=patient_image_path
+            )
+        
+        
+        return Response(
+                serializer.data,
+                status=status.HTTP_201_CREATED,
+                
+            )
 
 
 @api_view(['GET'])
@@ -63,3 +114,56 @@ def google_authenticate(request):
         
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    
+from rest_framework_simplejwt.views import TokenObtainPairView
+class CustomTokenObtainPairView(TokenObtainPairView):
+    def post(self, request, *args, **kwargs):
+        
+           # First check if user exists and is_active status
+        email = request.data.get('email')
+        try:
+            user = User.objects.get(email=email)
+            
+            # Check if email is verified (which would make is_active=True)
+            if not user.email_verified:
+                return Response({
+                    'error': 'email_not_verified',
+                    'detail': 'Please verify your email before logging in',
+                    'email': user.email
+                }, status=status.HTTP_403_FORBIDDEN)
+                
+            # Check if account is active (should be true if email verified)
+            if not user.is_active:
+                return Response({
+                    'error': 'account_inactive',
+                    'message': 'Account is not active'
+                }, status=status.HTTP_403_FORBIDDEN)
+                
+        except User.DoesNotExist:
+            # Don't reveal whether user exists for security
+            pass
+        response = super().post(request, *args, **kwargs)
+        
+        if response.status_code == 200:
+            try:
+                # Decode the access token to get user ID
+                access_token = AccessToken(response.data['access'])
+                user_id = access_token['user_id']
+                
+                # Get the user object
+                user = User.objects.get(id=user_id)
+                
+                # Add user data to the response
+                response.data['user'] = {
+                    'id': user.id,
+                    'email': user.email,
+                    'name': user.name,  
+                    'role': user.role,  # make sure your User model has this field
+                }
+            except User.DoesNotExist:
+                return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+            except Exception as e:
+                return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            
+
+        return response

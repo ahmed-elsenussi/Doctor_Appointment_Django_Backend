@@ -33,7 +33,6 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
 
-    'corsheaders',  #[SENU]: added to allow requests from frontend
     'django_filters', #[SENU]:  for effcient filteration
     'rest_framework',
     'django.contrib.admin',
@@ -53,6 +52,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     'dj_rest_auth',
     'dj_rest_auth.registration',
+    'corsheaders', # [SENU => AMS]: I removed mine and kept yours with the same ordering
     # =====================
     'appointments',
     'doctors',
@@ -78,6 +78,11 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  #[AMS] React default port
+    
+]
+CORS_ALLOW_CREDENTIALS = True
 # [AMS] for using JWT authentication and google login
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -102,6 +107,8 @@ AUTHENTICATION_BACKENDS = (
 )
 SITE_ID = 1  
 # ===========================
+ACCOUNT_LOGIN_METHODS = ['email']
+ACCOUNT_SIGNUP_FIELDS = ['email', 'password1', 'password2']
 ## Google OAuth settings
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
