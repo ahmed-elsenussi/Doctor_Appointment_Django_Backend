@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Appointment
 from patients.models import Patient
 from patients.serializers import PatientSerializer
+from doctors.serializers import DoctorSerializer
 
 # [SENU]: to validate and make the communication between the client and the backend
 class AppointmentSerializer(serializers.ModelSerializer):
@@ -18,7 +19,7 @@ class AppointmentSerializer(serializers.ModelSerializer):
     patient = PatientSerializer(source='patient_id', read_only=True)
 
   #[OKS] display the doctor's name in the appointment serializer
-    doctor_name = serializers.CharField(source='doctor_id.name', read_only=True)
+    doctor_name = DoctorSerializer(source='doctor_id', read_only=True)
 
     class Meta:
         model = Appointment

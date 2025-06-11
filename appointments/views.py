@@ -94,32 +94,31 @@ class AppointmentViewSet(viewsets.ModelViewSet):
 
         return Response(serializer.data)
     
+    #[OKS] allow patients to view their own appointments
     @action(detail=False, methods=['get'], url_path='my', permission_classes=[IsAuthenticated])
     def my_appointments(self, request):
-        # Filter appointments where the patient user matches the logged-in user
         user = request.user
         appointments = Appointment.objects.filter(patient_id__patient_id=user)
         serializer = self.get_serializer(appointments, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)    
 
 
-# Inside AppointmentViewSet...
-    @action(detail=True, methods=['post'], url_path='cancel', permission_classes=[IsAuthenticated])
+    #[OKS] allow patients to cancel their own appointments
+    @action(deitail=True, methods=['post'], url_path='cancel', permission_classes=[IsAuthenticated])
     def cancel_appointment(self, request, pk=None):
         appointment = self.get_object()
 
-        # Check if appointment is in 'Pending' status
+        # [OKS]Check if appointment is in 'Pending' status if  approved cant be canceled
         if appointment.reserve_status.lower() != 'pending':
             return Response(
                 {"detail": "Only pending appointments can be canceled."},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        # Check if current user is the assigned patient
         if not appointment.patient_id or request.user != appointment.patient_id.patient_id:
             raise PermissionDenied("You are not allowed to cancel this appointment.")
 
-        # Cancel the appointment
+        # [Oks] set the appointment's patient_id to None and change status to 'available' 
         appointment.patient_id = None
         appointment.reserve_status = "available"
         appointment.save()
