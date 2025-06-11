@@ -6,6 +6,9 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.core.mail import send_mail
 from django.conf import settings
 import uuid
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 
 class UserSerializer(serializers.ModelSerializer):
     # [AMS] accept national_id_image_path in input when role is doctor
@@ -37,13 +40,27 @@ class UserSerializer(serializers.ModelSerializer):
         
         #[AMS] Send verification email
         verification_link = f"http://localhost:8000/users/verify-email/{user.email_verification_token}/"
-        send_mail(
+        html_content = render_to_string('emails/email_verification.html', {
+            'user': user,
+            'verification_link': verification_link,
+        })
+        
+        # Render plain text content
+        text_content = strip_tags(render_to_string('emails/email_verification.txt', {
+            'user': user,
+            'verification_link': verification_link,
+        }))
+        
+        # Create and send email
+        email = EmailMultiAlternatives(
             'Verify your email',
-            f'Click this link to verify your email: {verification_link}',
+            text_content,
             settings.EMAIL_HOST_USER,
             [user.email],
-            fail_silently=False,
         )
+        email.attach_alternative(html_content, "text/html")
+        email.send()
+        
         return user
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
