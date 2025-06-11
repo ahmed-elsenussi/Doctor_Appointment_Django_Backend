@@ -65,7 +65,6 @@ class AppointmentViewSet(viewsets.ModelViewSet):
             # Build appointment details
             details = (
                 f"Patient: {appointment.patient_id.patient_id.name}\n"
-                f"Date: {appointment.date}\n"
                 f"Day: {appointment.day}\n"
                 f"Time: {appointment.from_time} - {appointment.to_time}\n"
                 f"Reason: {appointment.reason_of_visit}\n"

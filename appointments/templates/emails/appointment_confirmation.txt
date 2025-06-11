@@ -5,7 +5,6 @@ Dear {{ patient_name }},
 Your appointment has been successfully booked. Here are the details:
 
 Doctor: {{ doctor_name }}
-Date: {{ date }}
 Day: {{ day }}
 Time: {{ from_time }} - {{ to_time }}
 Status: {{ reserve_status }}
