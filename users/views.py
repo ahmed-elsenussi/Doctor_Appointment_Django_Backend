@@ -14,8 +14,7 @@ from django.contrib.auth import get_user_model
 from django.db import transaction  # [SENU] Added for atomicity
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
-
-
+from django.shortcuts import render
 # CRUD user: create, read ,update ,delete
 class UserViewSet(viewsets.ModelViewSet):
 
@@ -85,7 +84,7 @@ def verify_email(request, token):
         user.email_verification_token = None
         user.is_active = True
         user.save()
-        return Response({'message': 'Email verified successfully'}, status=status.HTTP_200_OK)
+        return render(request, 'accounts/email_confirmed.html')
     except User.DoesNotExist:
         return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
 

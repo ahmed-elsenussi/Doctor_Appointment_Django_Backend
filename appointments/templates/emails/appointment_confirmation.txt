@@ -1,0 +1,17 @@
+Appointment Confirmation
+
+Dear {{ patient_name }},
+
+Your appointment has been successfully booked. Here are the details:
+
+Doctor: {{ doctor_name }}
+Date: {{ date }}
+Day: {{ day }}
+Time: {{ from_time }} - {{ to_time }}
+Status: {{ reserve_status }}
+Reason for Visit: {{ reason_of_visit }}
+Location: {{ doctor_location }}
+
+If you have any questions, please contact us.
+
+Thank you!

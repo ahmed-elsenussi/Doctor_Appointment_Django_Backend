@@ -43,3 +43,6 @@ def send_appointment_email(appointment):
         )
         email.attach_alternative(html_content, "text/html")
         email.send()
+        print(f"Email sent to: {', '.join(recipients)}")
+    else:
+        print("No valid email addresses found for appointment notification.")

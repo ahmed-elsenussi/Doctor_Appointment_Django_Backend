@@ -5,7 +5,8 @@ from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend # [SENU]:for effcient filterting
 from .filters import AppointmentFilter #[SENU]: custom filter made to filter 'NOT EQUAL'
 from .utils import send_appointment_email # [AMS]-> 📧Send EMail to each of doctor and patient
-
+from notifications.models import Notification
+from django.urls import reverse
 # [SENU]: full CRUD for the appointment
 #-----------------------------
     # Create appointment
@@ -46,12 +47,48 @@ class AppointmentViewSet(viewsets.ModelViewSet):
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
+        previous_status = instance.reserve_status  # Save old status
+
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
 
-        # Send email after update
-        send_appointment_email(serializer.instance)
+        new_status = serializer.instance.reserve_status
+
+        # Send email only if reserve_status changed to "Pending"
+        if previous_status != "Pending" and (new_status.lower() == "pending"):
+            send_appointment_email(serializer.instance)
+
+            # --- Notification logic ---
+            appointment = serializer.instance
+            doctor_user = appointment.doctor_id.doctor_id  # Doctor model -> User
+            # Build appointment details
+            details = (
+                f"Patient: {appointment.patient_id.patient_id.name}\n"
+                f"Date: {appointment.date}\n"
+                f"Day: {appointment.day}\n"
+                f"Time: {appointment.from_time} - {appointment.to_time}\n"
+                f"Reason: {appointment.reason_of_visit}\n"
+                f"Status: {appointment.reserve_status}\n"
+            )
+            # Build a link to the appointment details (adjust the URL as per your frontend)
+            appointment_link = f"http://localhost:3000/doctor/appointments/{appointment.id}"
+
+            message = (
+                f"You have a new appointment assigned!\n\n"
+                f"{details}\n"
+                f"View details: {appointment_link}"
+            )
+
+            Notification.objects.create(
+                user=doctor_user,
+                notification_type="reminder",
+                message=message,
+                data={
+                    "appointment_id": appointment.id,
+                    "link": appointment_link,
+                }
+            )
 
         return Response(serializer.data)
 
