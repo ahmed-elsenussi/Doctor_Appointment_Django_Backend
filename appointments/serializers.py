@@ -10,7 +10,11 @@ class AppointmentSerializer(serializers.ModelSerializer):
     # patient_id = PatientSerializer(read_only=True)
 
     # PID , PATIENT
-    patient_id = serializers.PrimaryKeyRelatedField(queryset=Patient.objects.all())
+    patient_id = serializers.PrimaryKeyRelatedField(
+        queryset=Patient.objects.all(),
+        required=False,
+        allow_null=True
+    )
     patient = PatientSerializer(source='patient_id', read_only=True)
 
 
