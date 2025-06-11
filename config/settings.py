@@ -244,3 +244,11 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_REDIRECT_URI = 'http://localhost:8000/auth/google/call
 # [SENU: FOR TESTINGGGGG]
 CORS_ALLOW_ALL_ORIGINS = True
 
+#[AMS] make access atoken valid for 7 days
+from datetime import timedelta
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=7),  # Access token valid for 7 days
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=30),  # Refresh token valid for 30 days
+    'ROTATE_REFRESH_TOKENS': True,  # Rotate refresh tokens
+    'BLACKLIST_AFTER_ROTATION': True,  # Blacklist old refresh tokens after rotation
+}
