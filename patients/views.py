@@ -5,13 +5,11 @@ from .models import Patient
 from .serializers import PatientSerializer
 
 class PatientViewSet(viewsets.ModelViewSet):
-    """ 
-    @author: SENU
-    """
     queryset = Patient.objects.all()
     serializer_class = PatientSerializer
     permission_classes = [permissions.IsAuthenticated]  
-
+    
+  # [OKS] This viewset allows patients to view and update their own profile information.
     @action(detail=False, methods=['get', 'put'], url_path='me')
     def me(self, request):
         try:

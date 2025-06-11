@@ -17,7 +17,23 @@ class AppointmentSerializer(serializers.ModelSerializer):
     )
     patient = PatientSerializer(source='patient_id', read_only=True)
 
+  #[OKS] display the doctor's name in the appointment serializer
+    doctor_name = serializers.CharField(source='doctor_id.name', read_only=True)
 
     class Meta:
         model = Appointment
-        fields=  '__all__'
+        fields = [
+            'id',
+            'patient_id',
+            'patient',
+            'doctor_id',
+            'doctor_name',  
+            'reserve_status',
+            'day',
+            'date',
+            'from_time',
+            'to_time',
+            'reason_of_visit',
+            'reason_of_cancellation',
+            'doctor_notes',
+        ]
