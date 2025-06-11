@@ -4,6 +4,7 @@ from .serializers import AppointmentSerializer
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend # [SENU]:for effcient filterting
 from .filters import AppointmentFilter #[SENU]: custom filter made to filter 'NOT EQUAL'
+from .utils import send_appointment_email # [AMS]-> 📧Send EMail to each of doctor and patient
 
 # [SENU]: full CRUD for the appointment
 #-----------------------------
@@ -36,11 +37,23 @@ class AppointmentViewSet(viewsets.ModelViewSet):
 
         # createeeeeeeeeeeeeeeeeeeee
         self.perform_create(serializer)
-        
         # generate 'Location' header for the newly created object
         locationHeader = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=locationHeader)
+    
+    
+    # [AMS]-> 📧Send EMail to each of doctor and patient
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
 
+        # Send email after update
+        send_appointment_email(serializer.instance)
+
+        return Response(serializer.data)
 
 
 
