@@ -104,7 +104,7 @@ class AppointmentViewSet(viewsets.ModelViewSet):
 
 
     #[OKS] allow patients to cancel their own appointments
-    @action(deitail=True, methods=['post'], url_path='cancel', permission_classes=[IsAuthenticated])
+    @action(detail=True, methods=['post'], url_path='cancel', permission_classes=[IsAuthenticated])
     def cancel_appointment(self, request, pk=None):
         appointment = self.get_object()
 
