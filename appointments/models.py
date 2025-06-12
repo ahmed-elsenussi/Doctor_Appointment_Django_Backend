@@ -45,6 +45,9 @@ class Appointment(models.Model):
     from_time = models.TimeField()
     to_time = models.TimeField()
 
+    # [SENU]: ADD SOFT DELETE FLAG
+    is_deleted = models.BooleanField(default=False)  # soft delete flag
+
     # necessary texts
     reason_of_visit = models.TextField(max_length=200, blank=True) # from patient
     reason_of_cancellation = models.TextField(max_length=200, blank=True) # from doctor

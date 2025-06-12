@@ -23,6 +23,7 @@ class Specialization(models.Model):
 
 
 
+
 class Doctor(models.Model):
 
     # primary key and foreigin key for the user table
