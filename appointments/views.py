@@ -108,6 +108,7 @@ class AppointmentViewSet(viewsets.ModelViewSet):
     def cancel_appointment(self, request, pk=None):
         appointment = self.get_object()
 
+
         # [OKS]Check if appointment is in 'Pending' status if  approved cant be canceled
         if appointment.reserve_status.lower() != 'pending':
             return Response(
